@@ -1,9 +1,14 @@
-# Next.js on Netlify (OpenNext adapter is applied automatically).
-# Do not pin @netlify/plugin-nextjs — Netlify updates it each build.
+# Next.js on Netlify. This site was first created via Netlify Drop, which
+# skips auto framework detection — so we must declare the OpenNext
+# adapter explicitly. Without it, `next build` succeeds but Netlify
+# publishes `.next` as static files and every route 404s.
 
 [build]
   command = "npm run build"
   publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 [build.environment]
   NODE_VERSION = "22"
