@@ -17,9 +17,11 @@
   # the Netlify UI, secret scanning fails the deploy with
   # "Exposed secrets detected". Omit them from the scan; keep scanning
   # for real secrets (service role, encryption key, Meta secret).
-  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_APP_LOCALE"
-  # Turbopack writes env values into local `.sst` cache files under
-  # `.next/cache` (copied to `.netlify/.next/cache` by the runtime).
-  # Those files are never published, but secret scanning still fails
-  # when it finds ENCRYPTION_KEY / META_APP_SECRET there.
-  SECRETS_SCAN_OMIT_PATHS = ".next/cache,.netlify/.next/cache"
+  # OPENAI_* env vars are unused by this app (AI keys live in the DB via
+  # Settings). If someone still sets a short placeholder like `abc123` /
+  # `ollama` and marks it secret, scanning false-positives on tests and
+  # source maps — omit those keys from the scan.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_APP_LOCALE,OPENAI_API_KEY,OPENAI_BASE_URL,OPENAI_MODEL"
+  # Turbopack cache + source maps are build artifacts, not published
+  # content, but secret scanning still walks them.
+  SECRETS_SCAN_OMIT_PATHS = ".next/cache,.netlify/.next/cache,.netlify/plugins,**/*.map"
